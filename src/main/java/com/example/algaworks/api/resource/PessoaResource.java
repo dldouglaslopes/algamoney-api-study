@@ -43,6 +43,7 @@ public class PessoaResource {
 		return pessoaRepository.findAll();
 	}
 	
+	//criar pessoa
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa,
@@ -54,6 +55,7 @@ public class PessoaResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
 	}
 	
+	//pesquisar por pessoa
 	@GetMapping("/{codigo}")
 	public ResponseEntity<?> buscarPeloCodigo(@PathVariable Long codigo) {
 		Optional<Pessoa> pessoaSalva = pessoaRepository.findById(codigo);
@@ -62,15 +64,24 @@ public class PessoaResource {
 				ResponseEntity.ok(pessoaSalva) : ResponseEntity.notFound().build();
 	}
 	
+	//deletar por codigo
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		pessoaRepository.deleteById(codigo);
 	}
 	
+	//atualização completa
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa){
 		Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
 		return ResponseEntity.ok(pessoaSalva);	
+	}
+	
+	//atualização parcial
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
 	}
 }
